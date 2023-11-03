@@ -18,6 +18,10 @@ If later you only want to start the VM without running the whole script again, e
 make FVP_USE_BASE_PLAT=y FVP_VIRTFS_ENABLE=y FVP_VIRTFS_HOST_DIR="$(realpath shared_folder)" run-only
 ```
 
+In the just opened terminal running Linux, log in by simply typing `root` (no password required).
+And then, run the command `ra_demo`. It runs a `tmux` session. You can change between the two panes with `Ctrl+B`, `O` (standing for `O`ther).
+Note: Release `Ctrl` before pressing `O`.
+
 
 ## Repositories
 
@@ -109,7 +113,7 @@ This is the repository where the building starts.
 https://github.com/akorb/build/compare/3.22.0..3.22.0-ftpm-ra
 
 
-### [linux](https://github.com/akorb/linux/compare/aed8040f4aca31a35b9fe9fe3c1f3e3867ea2188..optee-3.22.0-ftpm-ra)
+### [linux](https://github.com/akorb/linux/tree/optee-3.22.0-ftpm-ra)
 
 #### Changes
 
@@ -119,4 +123,4 @@ See [my comment](https://github.com/OP-TEE/optee_os/issues/6162#issuecomment-163
 
 #### Link to changes
 
-https://github.com/akorb/linux/commit/b25ca622c92d7ee75bca8655de35825f35f802ff
+https://github.com/akorb/linux/compare/aed8040f4aca31a35b9fe9fe3c1f3e3867ea2188..optee-3.22.0-ftpm-ra
