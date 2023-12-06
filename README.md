@@ -48,6 +48,7 @@ Here, I want to show what repositories I modified or created to implement my sol
 
 https://github.com/akorb/ms-tpm-20-ref/compare/98b60a44aba79b15fcce1c0d1e46cf5918400f6a..3.22.0-ftpm-ra
 
+___
 
 ### [optee_os](https://github.com/akorb/optee_os/)
 
@@ -63,6 +64,7 @@ It also needs to be able to add the DICE specific X.509 extension containing the
 https://github.com/akorb/optee_os/compare/3.22.0..3.22.0-ftpm-ra
 
 
+___
 
 
 ### [ra_verifier](https://github.com/akorb/ra_verifier)
@@ -73,6 +75,7 @@ Written from scratch.
 It contains code for two executables, the prover and the verifier. The verifier is a server waiting for a prover to connect to get verified.
 The verifier retrieves information from the prover, and represents them to the user. The user can interactively decide whether this information represents a trustworthy device.
 
+___
 
 ### [alias_cert_extension](https://github.com/akorb/alias_cert_extension)
 
@@ -83,6 +86,7 @@ It contains the C code to create the data for the TCB Info Evidence X.509 extens
 
 The C code is copied at compile-time to where it is needed (ra_verifier and dice_data_generator). I didn't get it to work for the [optee_os](https://github.com/akorb/optee_os/) repository, however, so to optee_os I had to copy it manually, yielding duplicated code. Not nice, but works.
 
+___
 
 ### [dice_data_generator](https://github.com/akorb/dice_data_generator)
 
@@ -96,6 +100,7 @@ The resulting PEM certificates or keys are bundled to C header files and copied 
 * `cert_chain.h` → optee_os (to have access to the mocked certificates in the chain)
 * `boot_chain_final_key.h` → optee_os (to be able to sign the EK certificate)
 
+___
 
 ### [build](https://github.com/akorb/build)
 
@@ -112,6 +117,7 @@ This is the repository where the building starts.
 
 https://github.com/akorb/build/compare/3.22.0..3.22.0-ftpm-ra
 
+___
 
 ### [linux](https://github.com/akorb/linux/tree/optee-3.22.0-ftpm-ra)
 
