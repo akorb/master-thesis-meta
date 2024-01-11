@@ -1,6 +1,6 @@
 ## Overview
 
-This is the git repository describing how to set up and launch the demonstration 
+This is the git repository describing how to set up and launch the demonstration.
 
 ## Setup & Launch
 
@@ -10,15 +10,15 @@ Tested on Ubuntu (22.04) and Manjaro.
 ./setup.sh
 ```
 
-This scripts installs dependencies, checks out the repositories, builds everything, and starts the virtual machine running Linux in the NW, and OP-TEE OS in the SW.
+This script installs dependencies, checks out the repositories, builds everything, and starts the virtual machine running Linux in the NW and OP-TEE OS in the SW.
 
-If later you only want to start the VM without running the whole script again, execute the following in the `build` folder:
+If later you only want to start the VM without rerunning the whole script, execute the following in the `build` folder:
 
 ```
 make FVP_USE_BASE_PLAT=y FVP_VIRTFS_ENABLE=y FVP_VIRTFS_HOST_DIR="$(realpath shared_folder)" run-only
 ```
 
-In the just opened terminal running Linux, log in by simply typing `root` (no password required).
+Log in to the just opened Linux terminal by simply typing `root` (no password required).
 And then, run the command `ra_demo`. It runs a `tmux` session. You can change between the two panes with `Ctrl+B`, `O` (standing for `O`ther).
 Note: Release `Ctrl` before pressing `O`.
 
@@ -37,9 +37,9 @@ Here, I want to show what repositories I modified or created to implement my sol
 * Derive storage key and EPS from it
 * Ask OP-TEE OS to create the EK cert of itself (the fTPM)
 * Delete secrets as soon as they are no longer needed
-* Add command to return the whole certificate chain
+* Add a command to return the whole certificate chain
 * Encrypt data before storing, and decrypt it when loading it again
-* Store EK cert, template and nonce in the defined NV indices (as defined by the [TCG EK Credential Profile for TPM Family 2.0](https://trustedcomputinggroup.org/resource/http-trustedcomputinggroup-org-wp-content-uploads-tcg-ek-credential-profile-v-2-5-r2_published-pdf/))
+* Store EK cert, template, and nonce in the defined NV indices (as defined by the [TCG EK Credential Profile for TPM Family 2.0](https://trustedcomputinggroup.org/resource/http-trustedcomputinggroup-org-wp-content-uploads-tcg-ek-credential-profile-v-2-5-r2_published-pdf/))
 * Some changes to the OP-TEE fTPM stub code (`Samples/ARM32-FirmwareTPM/optee_ta/fTPM`) to stay consistent with the function prototypes of the general fTPM code
 
 
@@ -56,8 +56,8 @@ ___
 
 I added the attestation of the firmware TPM.
 This happens in [attestation.c](https://github.com/akorb/optee_os/compare/3.22.0..3.22.0-ftpm-ra#diff-24414f52059fe00212064e8346a9da29e5ca0d01b7cb9a8e3edd7acb7b4d8589).
-Since the OP-TEE OS creates the EK cert now, I needed to activate some mbedtls modules such that this is possible.
-It also needs to be able to add the DICE specific X.509 extension containing the fTPM's TCI into the EK cert. The code to create the data of this extension I added to the path `core/lib/alias_cert_extension`. This is the majority of the changes, even though the resulting files are mostly automatically generated. However, with some manual changes since the OP-TEE OS doesn't have a full C standard library.
+Since the OP-TEE OS creates the EK cert now, I needed to activate some mbedtls modules to make this possible.
+It also needs to be able to add the DICE-specific X.509 extension containing the fTPM's TCI into the EK cert. I added the code to create the data of this extension to the path `core/lib/alias_cert_extension`. This is the majority of the changes, even though the resulting files are mostly automatically generated. However, with some manual changes since the OP-TEE OS doesn't have a full C standard library.
 
 #### Link to changes
 
@@ -73,7 +73,7 @@ ___
 
 Written from scratch.
 It contains code for two executables, the prover and the verifier. The verifier is a server waiting for a prover to connect to get verified.
-The verifier retrieves information from the prover, and represents them to the user. The user can interactively decide whether this information represents a trustworthy device.
+The verifier retrieves information from the prover and represents it to the user. The user can interactively decide whether this information represents a trustworthy device.
 
 ___
 
@@ -84,7 +84,7 @@ ___
 Written from scratch.
 It contains the C code to create the data for the TCB Info Evidence X.509 extension defined in [DICE Attestation Architecture](https://trustedcomputinggroup.org/resource/dice-attestation-architecture/) (6.1.1).
 
-The C code is copied at compile-time to where it is needed (ra_endpoints and dice_data_generator). I didn't get it to work for the [optee_os](https://github.com/akorb/optee_os/) repository, however, so to optee_os I had to copy it manually, yielding duplicated code. Not nice, but works.
+The C code is copied at compile-time to where it is needed (ra_endpoints and dice_data_generator). However, I didn't get it to work for the [optee_os](https://github.com/akorb/optee_os/) repository, so I copied the code to it manually, duplicating it. Not nice, but it works.
 
 ___
 
@@ -94,7 +94,7 @@ ___
 
 Written from scratch.
 This repository is there to create mocked objects. That is the keys and the according certificates for the whole boot chain up to the EK cert (exclusive, since the EK cert is not mocked but created at runtime).
-The resulting PEM certificates or keys are bundled to C header files and copied to where they are required.
+The resulting PEM certificates or keys are bundled into C header files and copied to where required.
 
 * `cert_root.h` → ra_endpoints (to be able to verify the certificate chain)
 * `cert_chain.h` → optee_os (to have access to the mocked certificates in the chain)
@@ -109,8 +109,8 @@ ___
 This is the repository where the building starts.
 
 * Add [ra_endpoints](https://github.com/akorb/ra_endpoints) to resulting Linux image
-* Add [several executable scripts](https://github.com/akorb/build/tree/3.22.0-ftpm-ra/br-ext/board/fvp/overlay/usr/bin) to resulting Linux image which are convenient, most notable `ra_demo`, which starts a tmux session demonstrating my system. The other scripts are there to load the fTPM's storage from the FVP guest to the host (into `./build/shared_folder`) or vice versa, to make the data persistent between reboots. I used that for testing the fTPM between reboots, whether it keeps the data and whether it is nicely reset when the identity of the fTPM changes.
-* Integrate much newer version of tpm2_tools, because I needed some fixes
+* Add [several executable scripts](https://github.com/akorb/build/tree/3.22.0-ftpm-ra/br-ext/board/fvp/overlay/usr/bin) to resulting Linux image which are convenient, most notably `ra_demo`, which starts a tmux session demonstrating my system. The other scripts load the fTPM's storage from the FVP guest to the host (into `./build/shared_folder`) or vice versa to make the data persistent between reboots. I used that for testing the fTPM between reboots, whether it keeps the data, and whether it is nicely reset when the identity of the fTPM changes.
+* Integrate a much newer version of tpm2_tools because I needed some fixes
 
 
 #### Link to changes
@@ -124,7 +124,7 @@ ___
 #### Changes
 
 FVP has the Foundation and the Base image. The Base image has more features, e.g., it can mount a folder from the host directory. I wanted to use that to keep the fTPM's storage consistent.
-But the Base image didn't work first at first when the fTPM support in the build system was activated. I got it to work, and for that, I needed to copy some feature of the Base device tree to the Foundation device tree.
+But the Base image didn't work first at first when the fTPM support in the build system was activated. I got it to work; for that, I needed to copy some feature of the Base device tree to the Foundation device tree.
 See [my comment](https://github.com/OP-TEE/optee_os/issues/6162#issuecomment-1637705809) for more details.
 
 #### Link to changes
