@@ -67,7 +67,7 @@ https://github.com/akorb/optee_os/compare/3.22.0..3.22.0-ftpm-ra
 ___
 
 
-### [ra_verifier](https://github.com/akorb/ra_verifier)
+### [ra_endpoints](https://github.com/akorb/ra_endpoints)
 
 #### Changes
 
@@ -84,7 +84,7 @@ ___
 Written from scratch.
 It contains the C code to create the data for the TCB Info Evidence X.509 extension defined in [DICE Attestation Architecture](https://trustedcomputinggroup.org/resource/dice-attestation-architecture/) (6.1.1).
 
-The C code is copied at compile-time to where it is needed (ra_verifier and dice_data_generator). I didn't get it to work for the [optee_os](https://github.com/akorb/optee_os/) repository, however, so to optee_os I had to copy it manually, yielding duplicated code. Not nice, but works.
+The C code is copied at compile-time to where it is needed (ra_endpoints and dice_data_generator). I didn't get it to work for the [optee_os](https://github.com/akorb/optee_os/) repository, however, so to optee_os I had to copy it manually, yielding duplicated code. Not nice, but works.
 
 ___
 
@@ -96,7 +96,7 @@ Written from scratch.
 This repository is there to create mocked objects. That is the keys and the according certificates for the whole boot chain up to the EK cert (exclusive, since the EK cert is not mocked but created at runtime).
 The resulting PEM certificates or keys are bundled to C header files and copied to where they are required.
 
-* `cert_root.h` → ra_verifier (to be able to verify the certificate chain)
+* `cert_root.h` → ra_endpoints (to be able to verify the certificate chain)
 * `cert_chain.h` → optee_os (to have access to the mocked certificates in the chain)
 * `boot_chain_final_key.h` → optee_os (to be able to sign the EK certificate)
 
@@ -108,7 +108,7 @@ ___
 
 This is the repository where the building starts.
 
-* Add [ra_verifier](https://github.com/akorb/ra_verifier) to resulting Linux image
+* Add [ra_endpoints](https://github.com/akorb/ra_endpoints) to resulting Linux image
 * Add [several executable scripts](https://github.com/akorb/build/tree/3.22.0-ftpm-ra/br-ext/board/fvp/overlay/usr/bin) to resulting Linux image which are convenient, most notable `ra_demo`, which starts a tmux session demonstrating my system. The other scripts are there to load the fTPM's storage from the FVP guest to the host (into `./build/shared_folder`) or vice versa, to make the data persistent between reboots. I used that for testing the fTPM between reboots, whether it keeps the data and whether it is nicely reset when the identity of the fTPM changes.
 * Integrate much newer version of tpm2_tools, because I needed some fixes
 
