@@ -2,25 +2,54 @@
 
 This is the git repository describing how to set up and launch the demonstration.
 
-## Setup & Launch
+## Launch the demonstration
 
-Tested on Ubuntu (22.04) and Manjaro.
+### 1. Recommended environment
+
+I tested the setup script on [Ubuntu 22.04.3 LTS (Jammy Jellyfish)](https://releases.ubuntu.com/jammy/) and [Manjaro](https://manjaro.org/download/) (on 19.01.2024).
+Since Ubuntu is the officially supported operating system by OP-TEE, I recommend the former.
+The simplest way is to set up a Ubuntu VM, e.g., with VirtualBox, and give it 35 GB of storage space.
+
+### 2. Download & compile the source tree, and launch it within emulator
+
+`cd` to the directory wherein you want to set up the source tree and execute:
 
 ```sh
+wget 'https://github.com/akorb/master-thesis-meta/raw/main/setup.sh'
+chmod +x setup.sh
 ./setup.sh
 ```
 
-This script installs dependencies, checks out the repositories, builds everything, and starts the virtual machine running Linux in the NW and OP-TEE OS in the SW.
+This script updates the system, installs dependencies, checks out the required repositories, builds them, and starts the Arm platform emulator [FVP](https://developer.arm.com/Tools%20and%20Software/Fixed%20Virtual%20Platforms) running Linux in the NW and OP-TEE OS in the SW.
 
-If later you only want to start the VM without rerunning the whole script, execute the following in the `build` folder:
+If later you only want to launch FVP without rerunning the entire script, execute the following in the `build` folder:
 
 ```
 make FVP_USE_BASE_PLAT=y FVP_VIRTFS_ENABLE=y FVP_VIRTFS_HOST_DIR="$(realpath shared_folder)" run-only
 ```
 
+Either way, it should eventually look like the following:
+
+![The three windows after launching FVP](/images/three_windows.png)
+
+- Top: FVP dashboard
+- Left: Normal world (Linux), interactive
+- Right: Secure world (OP-TEE OS), only logs
+
+
+### 3. Launch demonstration
+
 Log in to the just opened Linux terminal by simply typing `root` (no password required).
 And then, run the command `ra_demo`. It runs a `tmux` session. You can change between the two panes with `Ctrl+B`, `O` (standing for `O`ther).
 Note: Release `Ctrl` before pressing `O`.
+
+The terminal result should look like this:
+
+![Screenshot of ra_demo](/images/ra_demo.png)
+
+The verifier (`ra_verifier`) is already launched and waits for a prover (`ra_prover`) to connect.
+The lower half of the terminal is waiting for you to hit Enter to spawn a prover.
+Switch to the upper pane running the verifier to interactively accept or deny the prover.
 
 
 ## Repositories
